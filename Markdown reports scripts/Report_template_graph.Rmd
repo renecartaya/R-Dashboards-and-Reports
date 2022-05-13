@@ -1,0 +1,316 @@
+---
+title: "Report template for graphs"
+author: "Rene Cartaya"
+date: '13-05-2022'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+## Time series plot
+
+
+  
+  ```{r pressure, echo=FALSE}
+a <- c(0:9)
+b <- a^2
+plot(a,b, type = "l",
+          col="blue", 
+          xlab = "x axis", 
+          ylab = "y axis", 
+          main = "Graphic title")
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+# Grafico de dona 1
+
+Paragraph  before first 
+
+```{r graficodona}
+
+# load library
+library(ggplot2)
+
+# Create test data.
+data <- data.frame(
+  category=c("A", "B", "C"),
+  count=c(10, 60, 30)
+)
+
+# Compute percentages
+data$fraction = data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax = cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin = c(0, head(data$ymax, n=-1))
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
+  xlim(c(2, 4)) # Try to remove that to see how to make a pie chart
+
+```
+
+\newpage
+
+# Grafico de dona 2
+
+
+Paragraph before second
+
+
+```{r grafico de dona}
+
+
+# load library
+library(ggplot2)
+
+# Create test data.
+data <- data.frame(
+  category=c("A", "B", "C"),
+  count=c(10, 60, 30)
+)
+
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(data$category, "\n value: ", data$count)
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_label( x=3.5, aes(y=labelPosition, label=label), size=6) +
+  scale_fill_brewer(palette=4) +
+  coord_polar(theta="y") +
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+
+```
+
+\newpage
+
+# Grafico de dona 3
+
+
+Paragraph before third
+
+```{r grafico de dona 2}
+
+# load library
+library(ggplot2)
+
+# Create test data.
+data <- data.frame(
+  category=c("A", "B", "C"),
+  count=c(10, 60, 30)
+)
+
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(data$category, "\n value: ", data$count)
+
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_text( x=2, aes(y=labelPosition, label=label, color=category), size=6) + # x here controls label position (inner / outer)
+  scale_fill_brewer(palette=3) +
+  scale_color_brewer(palette=3) +
+  coord_polar(theta="y") +
+  xlim(c(-1, 4)) +
+  theme_void() +
+  theme(legend.position = "none")
+
+```
+
+
+# Graficos de torta
+
+```{r torta1}
+
+# Create Data
+Prop <- c(3,7,9,1,2)
+
+# Make the default Pie Plot
+pie(Prop)
+
+
+```
+
+# Graficos de torta 2
+
+```{r torta2}
+
+# You can also custom the labels:
+pie(Prop , labels = c("Gr-A","Gr-B","Gr-C","Gr-D","Gr-E"))
+
+
+```
+
+# Graficos de torta 3
+
+
+```{r torta3}
+
+# If you give a low value to the "edge" argument, you go from something circular to a shape with edges
+pie(Prop , labels = c("Gr-A","Gr-B","Gr-C","Gr-D","Gr-E") , edges=10)
+
+```
+
+# Graficos de torta 4
+
+```{r torta4, echo=FALSE}
+
+# The density arguments adds stripes. You can control the angle of this lines with "angle"
+pie(Prop , labels = c("Gr-A","Gr-B","Gr-C","Gr-D","Gr-E") , density=10 , angle=c(20,90,30,10,0))
+
+```
+
+# Graficos de torta 5
+
+
+```{r torta5, echo=FALSE}
+
+# Prepare a color palette. Here with R color brewer:
+library(RColorBrewer)
+myPalette <- brewer.pal(5, "Set2") 
+
+# You can change the border of each area with the classical parameters:
+pie(Prop , labels = c("Gr-A","Gr-B","Gr-C","Gr-D","Gr-E"), border="white", col=myPalette )
+
+```
+
+# Graficos de torta 6
+
+
+```{r tortafancy, echo=FALSE}
+
+# Load ggplot2
+library(ggplot2)
+
+# Create Data
+data <- data.frame(
+  group=LETTERS[1:5],
+  value=c(13,7,9,21,2)
+)
+
+# Basic piechart
+ggplot(data, aes(x="", y=value, fill=group)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+
+```
+
+\newpage
+
+# Graficos de torta 7
+
+```{r tortafancy2, echo=FALSE}
+# Load ggplot2
+library(ggplot2)
+
+# Create Data
+data <- data.frame(
+  group=LETTERS[1:5],
+  value=c(13,7,9,21,2)
+)
+
+# Basic piechart
+ggplot(data, aes(x="", y=value, fill=group)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  
+  theme_void() # remove background, grid, numeric labels
+```
+
+\newpage
+
+# Graficos de torta 8
+
+```{r tortafancy3, echo=FALSE}
+
+# Load ggplot2
+library(ggplot2)
+library(dplyr)
+
+# Create Data
+data <- data.frame(
+  group=LETTERS[1:5],
+  value=c(13,7,9,21,2)
+)
+
+# Compute the position of labels
+data <- data %>% 
+  arrange(desc(group)) %>%
+  mutate(prop = value / sum(data$value) *100) %>%
+  mutate(ypos = cumsum(prop)- 0.5*prop )
+
+# Basic piechart
+ggplot(data, aes(x="", y=prop, fill=group)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  theme_void() + 
+  theme(legend.position="none") +
+  
+  geom_text(aes(y = ypos, label = group), color = "white", size=6) +
+  scale_fill_brewer(palette="Set1")
+
+```
+
+\newpage
+
+
+# Last plot so far
+
+```{r DFunction, echo=FALSE}
+# Libraries
+library(ggplot2)
+library(dplyr)
+
+# Load dataset from github
+data <- read.table("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", header=TRUE)
+
+# Make the histogram
+data %>%
+  filter( price<300 ) %>%
+  ggplot( aes(x=price)) +
+  geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8)
+```
+
+
+
