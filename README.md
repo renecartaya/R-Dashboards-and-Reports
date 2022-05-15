@@ -14,7 +14,13 @@ Automated reports embedding plots are developed using Markdown implementation in
 
 ### Example of the output
 
+Example of the start page.
+
 ![alt text](https://github.com/renecartaya/R-Dashboards-and-Reports/blob/main/Outputs/Maps_report.png)
+
+Example of embedded map in the report. 
+
+![alt text](https://github.com/renecartaya/R-Dashboards-and-Reports/blob/main/Outputs/Maps_report_2.png)
 
 ### Requeriments
 
