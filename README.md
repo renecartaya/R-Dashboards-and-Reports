@@ -14,4 +14,6 @@ Automated reports embedding plots are developed using Markdown implementation in
 
 The display of pdf reports using Markdown requires the installation of packages and dependences of LaTex.
 
-https://img.shields.io/github/license/mashape/apistatus.svg
+![Linux](https://img.shields.io/github/license/mashape/apistatus.svg)
+
+
