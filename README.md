@@ -12,6 +12,10 @@ The dashboards are displayed using Shiny with the option to be displayed as HTML
 
 Automated reports embedding plots are developed using Markdown implementation in R. 
 
+### Example of the output
+
+![alt text](https://github.com/renecartaya/Automation-and-CNC/blob/main/Autosampler%20I.png)
+
 ### Requeriments
 
 The display of pdf reports using Markdown requires the installation of packages and dependences of LaTex.
