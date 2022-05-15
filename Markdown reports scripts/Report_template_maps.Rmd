@@ -1,0 +1,286 @@
+---
+title: "Report template for maps"
+author: "Rene Cartaya"
+date: "15-05-2022"
+output: pdf_document
+---
+
+# Mapas
+
+Some embedded interesting maps
+
+# Hexagonal Map
+
+
+```{r mapaBasico, echo=FALSE}
+
+# World map is available in the maps package
+library(maps)
+
+# No margin
+par(mar=c(0,0,0,0))
+
+# World map
+map('world',
+    col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05,
+    mar=rep(0,4),border=0, ylim=c(-80,80) 
+)
+```
+
+\clearpage
+
+# Setting map with linked cities
+
+In the chunk bellow we can set cities we want to display on the map and in the following examples we will be addig different features
+
+```{r MapaBasico2, echo=FALSE}
+
+# Dplyr for data wrangling and pipe function
+library(dplyr)
+
+# Cities
+Caracas <- c(-66,11)
+Santiago <- c(-70,-34.3)
+Buenos_aires <- c(-58,-34)
+Madrid <- c(-5,41)
+Paris <- c(2,49)
+Bremen <- c(10,53.5)
+Melbourne <- c(145,-38)
+
+# Data frame
+data <- rbind(Caracas, Santiago, Buenos_aires, Madrid, Paris, Bremen, Melbourne) %>% 
+  as.data.frame()
+colnames(data) <- c("long","lat")
+
+# Show the cities on the map
+map('world',
+    col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05,
+    mar=rep(0,4),border=0, ylim=c(-80,80) 
+)
+points(x=data$long, y=data$lat, col="slateblue", cex=1, pch=20)
+
+
+```
+
+\clearpage
+
+# Map with travel links basic
+
+In this we can add lines that links different cities
+
+```{r MapaBasico3, echo=FALSE}
+
+# Load geosphere
+library(geosphere)
+
+# Background map
+map('world',
+    col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05,
+    mar=rep(0,4),border=0, ylim=c(-80,80) 
+)
+
+# Dot for cities
+points(x=data$long, y=data$lat, col="slateblue", cex=3, pch=20)
+
+# Compute the connection between Buenos Aires and Paris
+inter <- gcIntermediate(Paris,  Buenos_aires, n=50, addStartEnd=TRUE, breakAtDateLine=F)
+
+# Show this connection
+lines(inter, col="slateblue", lwd=2)
+
+# Between Paris and Melbourne
+inter <- gcIntermediate(Melbourne,  Paris, n=50, addStartEnd=TRUE, breakAtDateLine=F)             
+lines(inter, col="slateblue", lwd=2)
+
+```
+
+\clearpage
+
+# Map with travel links
+
+```{r otromapita, echo=FALSE}
+
+# A function that keeps the good part of the great circle, by Jeff Leek:
+getGreatCircle <- function(userLL,relationLL){
+  tmpCircle = greatCircle(userLL,relationLL, n=200)
+  start = which.min(abs(tmpCircle[,1] - data.frame(userLL)[1,1]))
+  end = which.min(abs(tmpCircle[,1] - relationLL[1]))
+  greatC = tmpCircle[start:end,]
+  return(greatC)
+}
+
+# background map
+map('world',col="#f2f2f2", fill=TRUE, bg="white", lwd=0.05,mar=rep(0,4),border=0, ylim=c(-80,80) )
+
+# map 3 connections:
+great <- getGreatCircle(Paris, Melbourne)
+lines(great, col="skyblue", lwd=2)
+great <- getGreatCircle(Buenos_aires, Melbourne)
+lines(great, col="skyblue", lwd=2)
+great <- getGreatCircle(Paris, Buenos_aires)
+lines(great, col="skyblue", lwd=2)
+
+# City names and dots
+points(x=data$long, y=data$lat, col="slateblue", cex=3, pch=20)
+text(rownames(data), x=data$long, y=data$lat,  col="slateblue", cex=1, pos=4)
+
+```
+
+\clearpage
+
+# World map
+
+```{r mapEU, echo=FALSE}
+
+# Libraries
+library(ggplot2)
+library(dplyr)
+require(maps)
+require(viridis)
+
+
+theme_set(
+  theme_void()
+  )
+
+world_map <- map_data("world")
+ggplot(world_map, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightgray", colour = "white")
+
+
+```
+
+
+\clearpage
+
+
+
+# Europe Map
+
+
+```{r mapaEU, echo=FALSE}
+
+# Some EU Contries
+some.eu.countries <- c(
+  "Portugal", "Spain", "France", "Switzerland", "Germany",
+  "Austria", "Belgium", "UK", "Netherlands",
+  "Denmark", "Poland", "Italy", 
+  "Croatia", "Slovenia", "Hungary", "Slovakia",
+  "Czech republic","Serbia","Kosovo","Montenegro",
+  "Albania","Greece","Bosnia and Herzegovina",
+  "Finland","Norway","Sweden","Iceland",
+  "Lithuania","Latvia", "Estonia"
+)
+# Retrievethe map data
+some.eu.maps <- map_data("world", region = some.eu.countries)
+
+# Compute the centroid as the mean longitude and lattitude
+# Used as label coordinate for country's names
+region.lab.data <- some.eu.maps %>%
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat))
+
+ggplot(some.eu.maps, aes(x = long, y = lat)) +
+  geom_polygon(aes( group = group, fill = region))+
+  geom_text(aes(label = region), data = region.lab.data,  size = 4, hjust = 0.5)+
+  scale_fill_viridis_d()+
+  theme_void()+
+  theme(legend.position = "none")
+
+```
+
+\clearpage
+
+# DACH region Map
+
+```{r mapaDACH, echo=FALSE}
+
+# Germany
+some.eu.countries <- c(
+  "Germany","Austria","Switzerland"
+)
+# Retrievethe map data
+some.eu.maps <- map_data("world", region = some.eu.countries)
+
+# Compute the centroid as the mean longitude and lattitude
+# Used as label coordinate for country's names
+region.lab.data <- some.eu.maps %>%
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat))
+
+ggplot(some.eu.maps, aes(x = long, y = lat)) +
+  geom_polygon(aes( group = group, fill = region))+
+  geom_text(aes(label = region), data = region.lab.data,  size = 4, hjust = 0.5)+
+  scale_fill_viridis_d()+
+  theme_void()+
+  theme(legend.position = "none")
+
+```
+
+# UK Map
+
+```{r mapaUK, echo=FALSE}
+
+# Libraries
+library(ggplot2)
+library(dplyr)
+
+# Get the world polygon and extract UK
+library(maps)
+UK <- map_data("world") %>% filter(region=="UK")
+
+# Get a data frame with longitude, latitude, and size of bubbles (a bubble = a city)
+data <- world.cities %>% filter(country.etc=="UK")
+
+# Left chart
+ggplot() +
+  geom_polygon(data = UK, aes(x=long, y = lat, group = group), fill="grey", alpha=0.3) +
+  geom_point( data=data, aes(x=long, y=lat)) +
+  theme_void() + ylim(50,59) + coord_map() 
+```
+
+# UK Map with cities
+
+
+```{r mapapequeño2, echo=FALSE}
+
+# Second graphic with names of the 10 biggest cities
+library(ggrepel)
+ggplot() +
+  geom_polygon(data = UK, aes(x=long, y = lat, group = group), fill="grey", alpha=0.3) +
+  geom_point( data=data, aes(x=long, y=lat, alpha=pop)) +
+  geom_text_repel( data=data %>% arrange(pop) %>% tail(10), aes(x=long, y=lat, label=name), size=5) +
+  geom_point( data=data %>% arrange(pop) %>% tail(10), aes(x=long, y=lat), color="red", size=3) +
+  theme_void() + ylim(50,59) + coord_map() +
+  theme(legend.position="none")
+
+```
+
+
+# Latin American Map
+
+```{r mapaLA, echo=FALSE}
+
+# Some EU Contries
+some.la.countries <- c(
+  "Venezuela", "Colombia","Guyana","Ecuador", "Peru","Bolivia",
+  "Chile","Argentina","Paraguay", "Uruguay","Brazil",
+  "Panama","Costa Rica","Nicaragua","Salvador","Honduras","Guatemala"
+)
+# Retrievethe map data
+some.la.maps <- map_data("world", region = some.la.countries)
+
+# Compute the centroid as the mean longitude and lattitude
+# Used as label coordinate for country's names
+region.lab.data <- some.la.maps %>%
+  group_by(region) %>%
+  summarise(long = mean(long), lat = mean(lat))
+
+ggplot(some.la.maps, aes(x = long, y = lat)) +
+  geom_polygon(aes( group = group, fill = region))+
+  geom_text(aes(label = region), data = region.lab.data,  size = 3, hjust = 0.5)+
+  scale_fill_viridis_d()+
+  theme_void()+
+  theme(legend.position = "none")
+
+```
