@@ -14,7 +14,7 @@ Automated reports embedding plots are developed using Markdown implementation in
 
 ### Example of the output
 
-![alt text](https://github.com/renecartaya/Automation-and-CNC/blob/main/Autosampler%20I.png)
+![alt text](https://github.com/renecartaya/R-Dashboards-and-Reports/blob/main/Outputs/Maps_report.png)
 
 ### Requeriments
 
