@@ -24,7 +24,7 @@ Example of embedded map in the report.
 
 ### Requeriments
 
-The display of pdf reports using Markdown requires the installation of packages and dependences of LaTex.
+The display of pdf reports using Markdown requires the installation of packages and dependences of LaTeX on your computer.
 
 
 
