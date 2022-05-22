@@ -1,12 +1,8 @@
 ![LicenceMIT](https://img.shields.io/github/license/mashape/apistatus.svg)
 
-# R-Dashboards-and-Reports
+# R-Reports-and-Dashboards
 
 Repository aimed to develop interactive dashboards and automated report in R based in Shiny and Markdown.
-
-## Dashboards
-
-The dashboards are displayed using Shiny with the option to be displayed as HTML documents.
 
 ## Reports 
 
@@ -21,6 +17,10 @@ Example of the start page.
 Example of embedded map in the report. 
 
 ![alt text](https://github.com/renecartaya/R-Dashboards-and-Reports/blob/main/Outputs/Maps_report_2.png)
+
+## Dashboards
+
+The dashboards are displayed using Shiny with the option to be displayed as HTML documents.
 
 ### Requeriments
 
